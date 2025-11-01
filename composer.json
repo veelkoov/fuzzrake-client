@@ -1,4 +1,5 @@
 {
+    "name": "veelkoov/fuzzrake-client",
     "autoload": {
         "psr-4": {
             "Fuzzrake\\": "src/"
