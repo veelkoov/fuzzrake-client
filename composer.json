@@ -1,5 +1,14 @@
 {
     "name": "veelkoov/fuzzrake-client",
+    "version": "0.1.0",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Veelkoov",
+            "email": "veelkoov@protonmail.com"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Fuzzrake\\": "src/"
