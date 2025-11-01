@@ -18,7 +18,8 @@
         "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^12.4",
         "composer/pcre": "^3.3",
-        "friendsofphp/php-cs-fixer": "^3.88"
+        "friendsofphp/php-cs-fixer": "^3.88",
+        "symfony/cache": "^7.3"
     },
     "scripts": {
         "pcf": "vendor/bin/php-cs-fixer fix --diff -vv --allow-risky=yes",

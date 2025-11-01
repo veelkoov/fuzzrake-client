@@ -7,12 +7,7 @@ namespace Fuzzrake;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class Client
 {
@@ -35,7 +30,7 @@ class Client
         try {
             $result = $this->cache->get($this->getCacheKey($creatorId));
 
-            if (null === $result) {
+            if (!$result instanceof Creator) {
                 $result = $this->refetch($creatorId);
 
                 $this->cache->set($this->getCacheKey($creatorId), $result, $this->ttlMinutes * 60);
@@ -58,6 +53,7 @@ class Client
 
         try {
             $response = $client->request('GET', $this->apiBaseUrl.'/api/creator/'.$creatorId);
+
             return new Creator($response->toArray());
         } catch (ExceptionInterface $exception) {
             throw new \RuntimeException(previous: $exception); // FIXME
