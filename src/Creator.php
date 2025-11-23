@@ -370,7 +370,7 @@ final class Creator
     {
         $result = $this->data[$field] ?? null;
 
-        if (!\is_array($result) || !array_is_list($result) || !array_all($result, is_string(...))) {
+        if (!\is_array($result) || !array_is_list($result) || !array_all($result, static fn (mixed $item) => \is_string($item))) {
             return [];
         }
 
