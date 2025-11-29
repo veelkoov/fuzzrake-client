@@ -8,15 +8,17 @@ use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Client
 {
     private readonly string $cacheKeyPrefix;
 
     public function __construct(
-        private readonly CacheInterface $cache,
         private readonly string $apiBaseUrl,
+        private readonly CacheInterface $cache,
         private readonly int $ttlMinutes = 60,
+        private ?HttpClientInterface $client = null,
     ) {
         if ($this->ttlMinutes < 60) {
             throw new \InvalidArgumentException('TTL must be minimum 60 minutes.');
@@ -49,10 +51,10 @@ class Client
 
     private function refetch(string $creatorId): Creator
     {
-        $client = HttpClient::create();
+        $this->client ??= HttpClient::create();
 
         try {
-            $response = $client->request('GET', $this->apiBaseUrl.'/api/creator/'.$creatorId);
+            $response = $this->client->request('GET', $this->apiBaseUrl.'/api/creator/'.$creatorId);
 
             return new Creator($response->toArray());
         } catch (ExceptionInterface $exception) {

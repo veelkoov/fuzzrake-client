@@ -26,7 +26,9 @@ final class Creator
     private const FEATURES_COMMENT = 'FEATURES_COMMENT';
     private const FEATURES = 'FEATURES';
     private const OTHER_FEATURES = 'OTHER_FEATURES';
-    private const PAYMENT_PLANS = 'PAYMENT_PLANS';
+    private const LEGACY_PAYMENT_PLANS = 'PAYMENT_PLANS';
+    private const OFFERS_PAYMENT_PLANS = 'OFFERS_PAYMENT_PLANS';
+    private const PAYMENT_PLANS_INFO = 'PAYMENT_PLANS_INFO';
     private const SPECIES_COMMENT = 'SPECIES_COMMENT';
     private const SPECIES_DOES = 'SPECIES_DOES';
     private const SPECIES_DOESNT = 'SPECIES_DOESNT';
@@ -274,9 +276,14 @@ final class Creator
         return $this->getString(self::URL_FURTRACK);
     }
 
-    public function getPaymentPlans(): string
+    public function getOffersPaymentPlans(): ?bool
     {
-        return $this->getString(self::PAYMENT_PLANS);
+        return $this->getPaymentPlans()[0];
+    }
+
+    public function getPaymentPlansInfo(): string
+    {
+        return $this->getPaymentPlans()[1];
     }
 
     public function getSpeciesComment(): string
@@ -347,6 +354,24 @@ final class Creator
     public function getCsTrackerIssue(): ?bool
     {
         return $this->getBool(self::CS_TRACKER_ISSUE);
+    }
+
+    /**
+     * @return array{?bool, string}
+     */
+    private function getPaymentPlans(): array
+    {
+        $isLegacy = \array_key_exists(self::LEGACY_PAYMENT_PLANS, $this->data);
+
+        if ($isLegacy) {
+            return match ($this->getString(self::LEGACY_PAYMENT_PLANS)) {
+                '' => [null, ''],
+                'None' => [false, ''],
+                default => [true, $this->getString(self::LEGACY_PAYMENT_PLANS)],
+            };
+        }
+
+        return [$this->getBool(self::OFFERS_PAYMENT_PLANS), $this->getString(self::PAYMENT_PLANS_INFO)];
     }
 
     private function getString(string $field): string
