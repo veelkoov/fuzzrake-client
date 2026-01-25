@@ -27,6 +27,9 @@ class Client
         $this->cacheKeyPrefix = CacheKey::getPrefix($this->apiBaseUrl);
     }
 
+    /**
+     * @throws FuzzrakeClientException
+     */
     public function getCreator(string $creatorId): Creator
     {
         try {
@@ -49,6 +52,9 @@ class Client
         return $this->cacheKeyPrefix.$creatorId;
     }
 
+    /**
+     * @throws FuzzrakeClientException
+     */
     private function refetch(string $creatorId): Creator
     {
         $this->client ??= HttpClient::create();
@@ -58,7 +64,7 @@ class Client
 
             return new Creator($response->toArray());
         } catch (ExceptionInterface $exception) {
-            throw new \RuntimeException(previous: $exception); // FIXME
+            throw new FuzzrakeClientException("Failed to fetch data. {$exception->getMessage()}", previous: $exception);
         }
     }
 }
