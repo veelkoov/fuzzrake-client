@@ -22,13 +22,13 @@
     "require": {
         "php": ">=8.1",
         "psr/simple-cache": "3.*",
-        "symfony/http-client": "^7.3"
+        "symfony/http-client": ">=6.4.33"
     },
     "require-dev": {
-        "phpstan/phpstan": "^2.1",
-        "phpunit/phpunit": "^12.4",
+        "phpstan/phpstan": "^2.1.38",
+        "phpunit/phpunit": "^12.5.8",
         "composer/pcre": "^3.3",
-        "friendsofphp/php-cs-fixer": "^3.88",
+        "friendsofphp/php-cs-fixer": "^3.93.1",
         "symfony/cache": "^7.3"
     },
     "scripts": {
