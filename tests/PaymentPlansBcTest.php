@@ -34,13 +34,16 @@ final class PaymentPlansBcTest extends TestCase
     {
         return [
             'Legacy, missing information' => [
-                ['PAYMENT_PLANS' => ''], null, '',
+                ['PAYMENT_PLANS' => []], null, '',
             ],
             'Legacy, no payment plans' => [
-                ['PAYMENT_PLANS' => 'None'], false, '',
+                ['PAYMENT_PLANS' => ['None']], false, '',
             ],
             'Legacy, offers payment plans' => [
-                ['PAYMENT_PLANS' => 'Something'], true, 'Something',
+                ['PAYMENT_PLANS' => ['Something']], true, 'Something',
+            ],
+            'Legacy, offers different payment plans' => [
+                ['PAYMENT_PLANS' => ['Something A', 'Something B']], true, "- Something A\n- Something B",
             ],
             'New, missing information' => [
                 ['OFFERS_PAYMENT_PLANS' => null, 'PAYMENT_PLANS_INFO' => ''], null, '',

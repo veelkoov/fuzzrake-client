@@ -361,17 +361,23 @@ final class Creator
      */
     private function getPaymentPlans(): array
     {
-        $isLegacy = \array_key_exists(self::LEGACY_PAYMENT_PLANS, $this->data);
-
-        if ($isLegacy) {
-            return match ($this->getString(self::LEGACY_PAYMENT_PLANS)) {
-                '' => [null, ''],
-                'None' => [false, ''],
-                default => [true, $this->getString(self::LEGACY_PAYMENT_PLANS)],
-            };
+        if (!\array_key_exists(self::LEGACY_PAYMENT_PLANS, $this->data)) {
+            return [$this->getBool(self::OFFERS_PAYMENT_PLANS), $this->getString(self::PAYMENT_PLANS_INFO)];
         }
 
-        return [$this->getBool(self::OFFERS_PAYMENT_PLANS), $this->getString(self::PAYMENT_PLANS_INFO)];
+        $plans = $this->getStringList(self::LEGACY_PAYMENT_PLANS);
+
+        if ([] === $plans) {
+            return [null, ''];
+        }
+        if (['None'] === $plans) {
+            return [false, ''];
+        }
+        if (1 === \count($plans)) {
+            return [true, $plans[0]];
+        }
+
+        return [true, '- '.implode("\n- ", $plans)];
     }
 
     private function getString(string $field): string
